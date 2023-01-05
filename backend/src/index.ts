@@ -1,6 +1,8 @@
 import "reflect-metadata";
 import { DataSource } from "typeorm";
 
+import User from "./entities/User";
+
 const main = async () => {
   const AppDataSource = new DataSource({
     type: "mysql",
@@ -9,7 +11,7 @@ const main = async () => {
     username: "joel",
     password: "admin",
     database: "ig_clone_db",
-    entities: [],
+    entities: [User],
     //   synchronize: true,
     logging: true,
   });

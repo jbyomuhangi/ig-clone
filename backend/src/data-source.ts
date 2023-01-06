@@ -1,7 +1,6 @@
+import path from "path";
 import "reflect-metadata";
 import { DataSource } from "typeorm";
-
-import { User } from "./entity/User";
 
 export const AppDataSource = new DataSource({
   type: "mysql",
@@ -11,17 +10,7 @@ export const AppDataSource = new DataSource({
   password: "admin",
   database: "ig_clone_db",
   logging: false,
-  entities: [User],
-  migrations: [],
+  entities: [path.join(__dirname, "./entity/*")],
+  migrations: [path.join(__dirname, "./migration/*")],
   subscribers: [],
 });
-
-// export const connectionSource = new DataSource({
-//     entities: ['src/**/**.entity{.ts,.js}'],
-//     migrations: ['src/migrations/**/*{.ts,.js}'],
-//     subscribers: ['src/subscriber/**/*{.ts,.js}'],
-// });
-
-// "migration:generate": "./node_modules/.bin/ts-node ./node_modules/.bin/typeorm migration:generate -d src/modules/config/ormconfig.ts",
-// "migration:up": "./node_modules/.bin/ts-node ./node_modules/.bin/typeorm migration:run -d src/modules/config/ormconfig.ts",
-// "migration:down": "./node_modules/.bin/ts-node ./node_modules/.bin/typeorm migration:revert -d src/modules/config/ormconfig.ts",

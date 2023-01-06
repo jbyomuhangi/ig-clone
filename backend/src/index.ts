@@ -12,7 +12,6 @@ const main = async () => {
     password: "admin",
     database: "ig_clone_db",
     entities: [User],
-    //   synchronize: true,
     logging: true,
   });
 

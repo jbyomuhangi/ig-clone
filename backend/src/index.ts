@@ -1,23 +1,7 @@
-import "reflect-metadata";
-import { DataSource } from "typeorm";
+import { AppDataSource } from "./data-source";
 
-import User from "./entities/User";
-
-const main = async () => {
-  const AppDataSource = new DataSource({
-    type: "mysql",
-    host: "localhost",
-    port: 3306,
-    username: "joel",
-    password: "admin",
-    database: "ig_clone_db",
-    entities: [User],
-    logging: true,
-  });
-
-  const dataSource = await AppDataSource.initialize();
-};
-
-main().catch((err) => {
-  console.error(err);
-});
+AppDataSource.initialize()
+  .then(async () => {
+    console.log("data source initialized");
+  })
+  .catch((error) => console.log(error));

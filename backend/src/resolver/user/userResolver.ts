@@ -1,23 +1,15 @@
 import argon2 from "argon2";
-import { Arg, Field, InputType, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, Mutation, Query, Resolver } from "type-graphql";
 
-@InputType()
-class UsernamePasswordInput {
-  @Field(() => String)
-  username: string;
-
-  @Field(() => String)
-  password: string;
-}
+import { RegisterInput } from "./inputTypes";
 
 @Resolver()
 export class UserResolver {
   @Mutation(() => String)
   async register(
-    @Arg("input", () => UsernamePasswordInput, { validate: false })
-    input: UsernamePasswordInput
+    @Arg("input", () => RegisterInput) input: RegisterInput
   ): Promise<string> {
-    const { password } = input;
+    const { firstName, lastName, password, username } = input;
 
     const hashedPassword = await argon2.hash(password);
 

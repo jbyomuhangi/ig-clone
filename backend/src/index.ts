@@ -5,7 +5,7 @@ import express from "express";
 import { buildSchema } from "type-graphql";
 
 import { AppDataSource } from "./data-source";
-import { UserResolver } from "./resolver/userResolver";
+import { UserResolver } from "./resolver/user/userResolver";
 import { PORT } from "./settings";
 import { MyContext } from "./types";
 
@@ -27,7 +27,7 @@ const main = async () => {
   apolloServer.applyMiddleware({ app });
 
   app.listen(PORT, () => {
-    console.log(`server is listening on port ${PORT} `);
+    console.log(`server is listening on port ${PORT}`);
   });
 };
 

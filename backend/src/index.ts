@@ -2,7 +2,8 @@ import "reflect-metadata";
 
 import { ApolloServer } from "apollo-server-express";
 import express from "express";
-import { buildSchema } from "type-graphql";
+import { GraphQLError, GraphQLFormattedError } from "graphql";
+import { ArgumentValidationError, buildSchema } from "type-graphql";
 
 import { AppDataSource } from "./data-source";
 import { UserResolver } from "./resolver/user/userResolver";
@@ -22,6 +23,18 @@ const main = async () => {
   const apolloServer = new ApolloServer({
     schema,
     context: ({ req, res }): MyContext => ({ req, res, dataSource }),
+    formatError: (error: GraphQLError): GraphQLFormattedError => {
+      /* Handle validation errors specifically */
+      if (error.originalError instanceof ArgumentValidationError) {
+        const firstError = error.extensions.exception.validationErrors[0];
+        return { message: Object.values(firstError.constraints)[0] as string };
+      }
+
+      return {
+        message: "Undefined error",
+        extensions: { error },
+      };
+    },
   });
   await apolloServer.start();
   apolloServer.applyMiddleware({ app });

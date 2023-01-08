@@ -20,3 +20,12 @@ export class RegisterInput {
   @Field(() => String, { nullable: true })
   lastName: string;
 }
+
+@InputType()
+export class LoginInput {
+  @Field(() => String)
+  username: string;
+
+  @Field(() => String)
+  password: string;
+}

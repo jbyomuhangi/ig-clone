@@ -8,7 +8,7 @@ export const AppDataSource = new DataSource({
   username: "joel",
   password: "admin",
   database: "ig_clone_db",
-  logging: false,
+  logging: true,
   entities: [path.join(__dirname, "./entity/*")],
   migrations: [path.join(__dirname, "./migration/*")],
   subscribers: [],

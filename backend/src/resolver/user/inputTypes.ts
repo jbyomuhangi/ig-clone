@@ -1,10 +1,13 @@
 import { Field, InputType } from "type-graphql";
 import { Length } from "class-validator";
 
+import { IsUniqueUsername } from "./validators/IsUniqueUsername";
+
 @InputType()
 export class RegisterInput {
   @Field(() => String)
   @Length(1, 255)
+  @IsUniqueUsername({ message: "A user with that name already exists" })
   username: string;
 
   @Field(() => String)

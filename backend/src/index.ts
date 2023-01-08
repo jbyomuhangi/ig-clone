@@ -31,7 +31,7 @@ const main = async () => {
       }
 
       return {
-        message: "Undefined error",
+        message: error.message || "Undefined error",
         extensions: { error },
       };
     },

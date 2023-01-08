@@ -10,7 +10,8 @@ import { MyContext } from "../../types";
 export class UserResolver {
   @Mutation(() => User)
   async register(
-    @Arg("input", () => RegisterInput) input: RegisterInput
+    @Arg("input", () => RegisterInput) input: RegisterInput,
+    @Ctx() { req }: MyContext
   ): Promise<User> {
     const { password } = input;
     const hashedPassword = await argon2.hash(password);
@@ -19,6 +20,8 @@ export class UserResolver {
       ...input,
       password: hashedPassword,
     }).save();
+
+    req.session.userId = user.id;
 
     return user;
   }
@@ -40,8 +43,12 @@ export class UserResolver {
     return user;
   }
 
-  @Query(() => String)
-  me(): string {
-    return "hello, it's me! Mario!";
+  @Query(() => User, { nullable: true })
+  async me(@Ctx() { req }: MyContext): Promise<User | null> {
+    /* User is not logged in */
+    if (!req.session.id) return null;
+
+    const user = await User.findOne({ where: { id: req.session.userId } });
+    return user;
   }
 }

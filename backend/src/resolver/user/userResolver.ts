@@ -1,9 +1,10 @@
 import argon2 from "argon2";
 import { GraphQLError } from "graphql";
-import { Arg, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
 
 import { User } from "../../entity/User";
 import { LoginInput, RegisterInput } from "./inputTypes";
+import { MyContext } from "../../types";
 
 @Resolver()
 export class UserResolver {
@@ -24,7 +25,8 @@ export class UserResolver {
 
   @Mutation(() => User)
   async login(
-    @Arg("input", () => LoginInput, { validate: false }) input: LoginInput
+    @Arg("input", () => LoginInput, { validate: false }) input: LoginInput,
+    @Ctx() { req }: MyContext
   ): Promise<User> {
     const { username, password } = input;
 
@@ -34,6 +36,7 @@ export class UserResolver {
     const isValidPassword = await argon2.verify(user.password, password);
     if (!isValidPassword) throw new GraphQLError("Incorrect password");
 
+    req.session.userId = user.id;
     return user;
   }
 

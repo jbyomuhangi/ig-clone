@@ -1,9 +1,12 @@
 import "reflect-metadata";
 
 import { ApolloServer } from "apollo-server-express";
+import connectRedis from "connect-redis";
 import express from "express";
+import session from "express-session";
 import { GraphQLError, GraphQLFormattedError } from "graphql";
 import { ArgumentValidationError, buildSchema } from "type-graphql";
+import Redis from "ioredis";
 
 import { AppDataSource } from "./data-source";
 import { UserResolver } from "./resolver/user/userResolver";
@@ -14,7 +17,29 @@ const main = async () => {
   /* Initialize the data source */
   const dataSource = await AppDataSource.initialize();
 
+  /* Create express app */
   const app = express();
+
+  /* Set up redis connection */
+  const RedisStore = connectRedis(session);
+  const redis = new Redis();
+
+  /* User express session in the app */
+  app.use(
+    session({
+      name: "ig_clone_cookie",
+      store: new RedisStore({ client: redis, disableTouch: true }),
+      saveUninitialized: false,
+      secret: "wdwdOOKEJO22232Oosnwnonsiw",
+      resave: false,
+      cookie: {
+        maxAge: 1000 * 60 * 60 * 24 * 365 * 10, // 10 years,
+        httpOnly: true,
+        secure: false, // cookie only works in https if true
+        sameSite: "lax",
+      },
+    })
+  );
 
   /* Build the graphql schema */
   const schema = await buildSchema({ resolvers: [UserResolver] });

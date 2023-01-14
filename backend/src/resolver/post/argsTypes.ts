@@ -5,6 +5,12 @@ import { DEFAULT_PAGINATION_LIMIT } from "../../settings";
 
 @ArgsType()
 export class GetPostsArgs {
+  @Field(() => Int, { nullable: true })
+  id: number;
+
+  @Field(() => Int, { nullable: true })
+  userId: number;
+
   @Field(() => Int, { nullable: true, defaultValue: 0 })
   @Min(0)
   offset: number;
@@ -13,7 +19,4 @@ export class GetPostsArgs {
   @Min(0)
   @Max(50)
   limit: number;
-
-  @Field(() => Int, { nullable: true })
-  userId: number;
 }

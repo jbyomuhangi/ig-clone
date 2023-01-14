@@ -5,8 +5,8 @@ import connectRedis from "connect-redis";
 import express from "express";
 import session from "express-session";
 import { GraphQLError, GraphQLFormattedError } from "graphql";
-import { ArgumentValidationError, buildSchema } from "type-graphql";
 import Redis from "ioredis";
+import { ArgumentValidationError, buildSchema } from "type-graphql";
 
 import { AppDataSource } from "./data-source";
 import { UserResolver } from "./resolver/user/userResolver";

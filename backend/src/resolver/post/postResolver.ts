@@ -5,19 +5,36 @@ import {
   UseMiddleware,
   Mutation,
   Arg,
+  Args,
 } from "type-graphql";
 
 import { isAuth } from "../../middleware/isAuth";
 import { MyContext } from "../../types";
 import { Post } from "../../entity/Post";
 import { CreatePostInput } from "./inputTypes";
+import { GetPostsArgs } from "./argsTypes";
 
 @Resolver()
 export class PostResolver {
   @Query(() => [Post])
   @UseMiddleware(isAuth)
-  async posts(@Ctx() {}: MyContext): Promise<Post[]> {
-    return [];
+  async posts(
+    @Args() args: GetPostsArgs,
+    @Ctx() { dataSource }: MyContext
+  ): Promise<Post[]> {
+    const { offset, limit } = args;
+
+    /* Early return if limit is 0 */
+    if (limit === 0) return [];
+
+    const posts = await dataSource
+      .getRepository(Post)
+      .createQueryBuilder()
+      .skip(offset)
+      .take(limit)
+      .getMany();
+
+    return posts;
   }
 
   @Mutation(() => Post)

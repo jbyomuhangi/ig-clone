@@ -11,7 +11,7 @@ import {
 import { isAuth } from "../../middleware/isAuth";
 import { MyContext } from "../../types";
 import { Post } from "../../entity/Post";
-import { CreatePostInput } from "./inputTypes";
+import { CreatePostInput, UpdatePostInput } from "./inputTypes";
 import { GetPostsArgs } from "./argsTypes";
 
 @Resolver()
@@ -49,5 +49,27 @@ export class PostResolver {
     }).save();
 
     return post;
+  }
+
+  @Mutation(() => Post, { nullable: true })
+  @UseMiddleware(isAuth)
+  async updatePost(
+    @Arg("input", () => UpdatePostInput) input: UpdatePostInput,
+    @Ctx() { req, dataSource }: MyContext
+  ): Promise<Post | null> {
+    const { id, caption } = input;
+    const result = await dataSource
+      .createQueryBuilder()
+      .update(Post)
+      .set({ caption })
+      .where("id = :id", { id })
+      .andWhere("userId = :userId", { userId: req.session.userId })
+      .execute();
+
+    /* Return early if no rows were affected */
+    if (!result.affected) return null;
+
+    const updatedPost = await Post.findOne({ where: { id } });
+    return updatedPost;
   }
 }

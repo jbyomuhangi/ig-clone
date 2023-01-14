@@ -1,6 +1,6 @@
 import "reflect-metadata";
 
-import { ApolloServer } from "apollo-server-express";
+import { ApolloServer, AuthenticationError } from "apollo-server-express";
 import connectRedis from "connect-redis";
 import express from "express";
 import session from "express-session";
@@ -13,6 +13,7 @@ import { UserResolver } from "./resolver/user/userResolver";
 import { PostResolver } from "./resolver/post/postResolver";
 import { PORT } from "./settings";
 import { MyContext } from "./types";
+import { ErrorTypeEnum } from "./enums/errorTypeEnum";
 
 const main = async () => {
   /* Initialize the data source */
@@ -53,12 +54,23 @@ const main = async () => {
       /* Handle validation errors specifically */
       if (error.originalError instanceof ArgumentValidationError) {
         const firstError = error.extensions.exception.validationErrors[0];
-        return { message: Object.values(firstError.constraints)[0] as string };
+        return {
+          message: Object.values(firstError.constraints)[0] as string,
+          extensions: { type: ErrorTypeEnum.VALIDATION_ERROR },
+        };
+      }
+
+      /* Handle authentication errors */
+      if (error.originalError instanceof AuthenticationError) {
+        return {
+          message: error.message,
+          extensions: { type: ErrorTypeEnum.AUTHENTICATION_ERROR },
+        };
       }
 
       return {
-        message: error.message || "Undefined error",
-        extensions: { error },
+        message: "Undefined error",
+        extensions: { type: ErrorTypeEnum.UNDEFINED_ERROR, error },
       };
     },
   });

@@ -70,7 +70,7 @@ const main = async () => {
 
       return {
         message: "Undefined error",
-        extensions: { type: ErrorTypeEnum.UNDEFINED_ERROR, error },
+        extensions: { type: ErrorTypeEnum.UNDEFINED_ERROR },
       };
     },
   });

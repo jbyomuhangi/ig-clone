@@ -6,6 +6,7 @@ import {
   Mutation,
   Arg,
   Args,
+  Int,
 } from "type-graphql";
 
 import { isAuth } from "../../middleware/isAuth";
@@ -71,5 +72,17 @@ export class PostResolver {
 
     const updatedPost = await Post.findOne({ where: { id } });
     return updatedPost;
+  }
+
+  @Mutation(() => Boolean)
+  @UseMiddleware(isAuth)
+  async deletePost(
+    @Arg("id", () => Int) id: number,
+    @Ctx() { req }: MyContext
+  ): Promise<boolean> {
+    const result = await Post.delete({ id, userId: req.session.userId });
+
+    if (!result.affected) return false;
+    return true;
   }
 }

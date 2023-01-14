@@ -18,7 +18,7 @@ export class Post extends BaseEntity {
   id: number;
 
   @Column({ nullable: true })
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   caption: string;
 
   @Column()

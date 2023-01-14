@@ -22,18 +22,16 @@ export class PostResolver {
     @Args() args: GetPostsArgs,
     @Ctx() { dataSource }: MyContext
   ): Promise<Post[]> {
-    const { offset, limit } = args;
+    const { offset, limit, userId } = args;
 
     /* Early return if limit is 0 */
     if (limit === 0) return [];
 
-    const posts = await dataSource
-      .getRepository(Post)
-      .createQueryBuilder()
-      .skip(offset)
-      .take(limit)
-      .getMany();
+    const qb = dataSource.getRepository(Post).createQueryBuilder("p");
 
+    if (userId) qb.where("p.userId = :userId", { userId: userId });
+
+    const posts = await qb.skip(offset).take(limit).getMany();
     return posts;
   }
 

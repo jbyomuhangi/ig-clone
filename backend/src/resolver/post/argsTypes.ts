@@ -13,4 +13,7 @@ export class GetPostsArgs {
   @Min(0)
   @Max(50)
   limit: number;
+
+  @Field(() => Int, { nullable: true })
+  userId: number;
 }

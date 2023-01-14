@@ -1,10 +1,18 @@
 import argon2 from "argon2";
 import { GraphQLError } from "graphql";
-import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
+import {
+  Arg,
+  Ctx,
+  Mutation,
+  Query,
+  Resolver,
+  UseMiddleware,
+} from "type-graphql";
 
 import { User } from "../../entity/User";
-import { LoginInput, RegisterInput } from "./inputTypes";
+import { isAuth } from "../../middleware/isAuth";
 import { MyContext } from "../../types";
+import { LoginInput, RegisterInput } from "./inputTypes";
 
 @Resolver()
 export class UserResolver {
@@ -44,10 +52,8 @@ export class UserResolver {
   }
 
   @Query(() => User, { nullable: true })
+  @UseMiddleware(isAuth)
   async me(@Ctx() { req }: MyContext): Promise<User | null> {
-    /* User is not logged in */
-    if (!req.session.userId) return null;
-
     const user = await User.findOne({ where: { id: req.session.userId } });
     return user;
   }

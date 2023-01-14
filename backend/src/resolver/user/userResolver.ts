@@ -11,6 +11,7 @@ import {
 
 import { User } from "../../entity/User";
 import { isAuth } from "../../middleware/isAuth";
+import { COOKIE_NAME } from "../../settings";
 import { MyContext } from "../../types";
 import { LoginInput, RegisterInput } from "./inputTypes";
 
@@ -56,5 +57,20 @@ export class UserResolver {
 
     req.session.userId = user.id;
     return user;
+  }
+
+  @Mutation(() => Boolean)
+  @UseMiddleware(isAuth)
+  logout(@Ctx() { req, res }: MyContext): Promise<boolean> {
+    return new Promise((resolve) => {
+      req.session.destroy((error) => {
+        if (error) {
+          throw new GraphQLError("");
+        } else {
+          res.clearCookie(COOKIE_NAME);
+          resolve(true);
+        }
+      });
+    });
   }
 }

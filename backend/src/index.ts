@@ -11,7 +11,7 @@ import { ArgumentValidationError, buildSchema } from "type-graphql";
 import { AppDataSource } from "./data-source";
 import { UserResolver } from "./resolver/user/userResolver";
 import { PostResolver } from "./resolver/post/postResolver";
-import { PORT } from "./settings";
+import { COOKIE_NAME, PORT } from "./settings";
 import { MyContext } from "./types";
 import { ErrorTypeEnum } from "./enums/errorTypeEnum";
 
@@ -29,7 +29,7 @@ const main = async () => {
   /* Use express session in the app */
   app.use(
     session({
-      name: "ig_clone_cookie",
+      name: COOKIE_NAME,
       store: new RedisStore({ client: redis, disableTouch: true }),
       saveUninitialized: false,
       secret: "wdwdOOKEJO22232Oosnwnonsiw",

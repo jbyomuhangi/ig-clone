@@ -16,6 +16,13 @@ import { LoginInput, RegisterInput } from "./inputTypes";
 
 @Resolver()
 export class UserResolver {
+  @Query(() => User, { nullable: true })
+  @UseMiddleware(isAuth)
+  async me(@Ctx() { req }: MyContext): Promise<User | null> {
+    const user = await User.findOne({ where: { id: req.session.userId } });
+    return user;
+  }
+
   @Mutation(() => User)
   async register(
     @Arg("input", () => RegisterInput) input: RegisterInput,
@@ -48,13 +55,6 @@ export class UserResolver {
     if (!isValidPassword) throw new GraphQLError("Incorrect password");
 
     req.session.userId = user.id;
-    return user;
-  }
-
-  @Query(() => User, { nullable: true })
-  @UseMiddleware(isAuth)
-  async me(@Ctx() { req }: MyContext): Promise<User | null> {
-    const user = await User.findOne({ where: { id: req.session.userId } });
     return user;
   }
 }

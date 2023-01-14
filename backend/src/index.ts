@@ -10,6 +10,7 @@ import { ArgumentValidationError, buildSchema } from "type-graphql";
 
 import { AppDataSource } from "./data-source";
 import { UserResolver } from "./resolver/user/userResolver";
+import { PostResolver } from "./resolver/post/postResolver";
 import { PORT } from "./settings";
 import { MyContext } from "./types";
 
@@ -42,7 +43,7 @@ const main = async () => {
   );
 
   /* Build the graphql schema */
-  const schema = await buildSchema({ resolvers: [UserResolver] });
+  const schema = await buildSchema({ resolvers: [UserResolver, PostResolver] });
 
   /* Initialize apollo server */
   const apolloServer = new ApolloServer({

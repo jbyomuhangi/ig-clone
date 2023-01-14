@@ -31,6 +31,6 @@ export class User extends BaseEntity {
   @Field(() => String, { nullable: true })
   lastName: string;
 
-  @OneToMany(() => Post, (post) => post.userId)
+  @OneToMany(() => Post, (post) => post.user)
   posts: Post[];
 }

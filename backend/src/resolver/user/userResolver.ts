@@ -46,7 +46,7 @@ export class UserResolver {
   @Query(() => User, { nullable: true })
   async me(@Ctx() { req }: MyContext): Promise<User | null> {
     /* User is not logged in */
-    if (!req.session.id) return null;
+    if (!req.session.userId) return null;
 
     const user = await User.findOne({ where: { id: req.session.userId } });
     return user;

@@ -24,7 +24,7 @@ const main = async () => {
   const RedisStore = connectRedis(session);
   const redis = new Redis();
 
-  /* User express session in the app */
+  /* Use express session in the app */
   app.use(
     session({
       name: "ig_clone_cookie",

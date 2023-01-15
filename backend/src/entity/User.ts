@@ -25,11 +25,11 @@ export class User extends BaseEntity {
 
   @Column({ nullable: true })
   @Field(() => String, { nullable: true })
-  firstName: string;
+  firstName?: string;
 
   @Column({ nullable: true })
   @Field(() => String, { nullable: true })
-  lastName: string;
+  lastName?: string;
 
   @OneToMany(() => Post, (post) => post.user)
   posts: Post[];

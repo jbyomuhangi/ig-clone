@@ -7,15 +7,21 @@ import {
   Args,
   Int,
   Authorized,
+  FieldResolver,
+  Root,
 } from "type-graphql";
 
 import { MyContext } from "../../types";
 import { Post } from "../../entity/Post";
+import { User } from "../../entity/User";
 import { CreatePostInput, UpdatePostInput } from "./inputTypes";
 import { GetPostsArgs } from "./argsTypes";
 
-@Resolver()
+@Resolver(() => Post)
 export class PostResolver {
+  /////////////////////////////////////////
+  // Queries
+  /////////////////////////////////////////
   @Query(() => [Post])
   @Authorized()
   async posts(
@@ -35,6 +41,10 @@ export class PostResolver {
     const posts = await qb.skip(offset).take(limit).getMany();
     return posts;
   }
+
+  /////////////////////////////////////////
+  // Mutations
+  /////////////////////////////////////////
 
   @Mutation(() => Post)
   @Authorized()
@@ -84,5 +94,16 @@ export class PostResolver {
 
     if (!result.affected) return false;
     return true;
+  }
+
+  /////////////////////////////////////////
+  // Field Resolvers
+  /////////////////////////////////////////
+
+  @FieldResolver(() => User, { nullable: true })
+  @Authorized()
+  async user(@Root() post: Post): Promise<User | null> {
+    const user = await User.findOne({ where: { id: post.userId } });
+    return user;
   }
 }

@@ -1,20 +1,38 @@
 import argon2 from "argon2";
 import { GraphQLError } from "graphql";
-import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from "type-graphql";
+import {
+  Arg,
+  Authorized,
+  Ctx,
+  FieldResolver,
+  Mutation,
+  Query,
+  Resolver,
+  Root,
+} from "type-graphql";
 
 import { User } from "../../entity/User";
+import { Post } from "../../entity/Post";
 import { COOKIE_NAME } from "../../settings";
 import { MyContext } from "../../types";
 import { LoginInput, RegisterInput } from "./inputTypes";
 
-@Resolver()
+@Resolver(() => User)
 export class UserResolver {
+  /////////////////////////////////////////
+  // Queries
+  /////////////////////////////////////////
+
   @Query(() => User, { nullable: true })
   @Authorized()
   async me(@Ctx() { req }: MyContext): Promise<User | null> {
     const user = await User.findOne({ where: { id: req.session.userId } });
     return user;
   }
+
+  /////////////////////////////////////////
+  // Mutations
+  /////////////////////////////////////////
 
   @Mutation(() => User)
   async register(
@@ -64,5 +82,16 @@ export class UserResolver {
         }
       });
     });
+  }
+
+  /////////////////////////////////////////
+  // Field Resolvers
+  /////////////////////////////////////////
+
+  @FieldResolver(() => [Post])
+  @Authorized()
+  async posts(@Root() user: User): Promise<Post[]> {
+    const posts = await Post.find({ where: { userId: user.id } });
+    return posts;
   }
 }

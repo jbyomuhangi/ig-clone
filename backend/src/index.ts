@@ -7,10 +7,9 @@ import session from "express-session";
 import { GraphQLError, GraphQLFormattedError } from "graphql";
 import Redis from "ioredis";
 import { ArgumentValidationError, buildSchema } from "type-graphql";
+import path from "path";
 
 import { AppDataSource } from "./data-source";
-import { UserResolver } from "./resolver/user/userResolver";
-import { PostResolver } from "./resolver/post/postResolver";
 import { COOKIE_NAME, PORT } from "./settings";
 import { MyContext } from "./types";
 import { ErrorTypeEnum } from "./enums/errorTypeEnum";
@@ -44,7 +43,9 @@ const main = async () => {
   );
 
   /* Build the graphql schema */
-  const schema = await buildSchema({ resolvers: [UserResolver, PostResolver] });
+  const schema = await buildSchema({
+    resolvers: [path.join(__dirname, "./resolver/**/*.resolver.{ts,js}")],
+  });
 
   /* Initialize apollo server */
   const apolloServer = new ApolloServer({

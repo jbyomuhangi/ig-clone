@@ -1,13 +1,17 @@
 import "reflect-metadata";
 
-import { ApolloServer, AuthenticationError } from "apollo-server-express";
+import { ApolloServer } from "apollo-server-express";
 import connectRedis from "connect-redis";
 import express from "express";
 import session from "express-session";
 import { GraphQLError, GraphQLFormattedError } from "graphql";
 import Redis from "ioredis";
 import path from "path";
-import { ArgumentValidationError, buildSchema } from "type-graphql";
+import {
+  ArgumentValidationError,
+  buildSchema,
+  UnauthorizedError,
+} from "type-graphql";
 
 import { authChecker } from "./authChecker";
 import { AppDataSource } from "./data-source";
@@ -64,7 +68,7 @@ const main = async () => {
       }
 
       /* Handle authentication errors */
-      if (error.originalError instanceof AuthenticationError) {
+      if (error.originalError instanceof UnauthorizedError) {
         return {
           message: error.message,
           extensions: { type: ErrorTypeEnum.AUTHENTICATION_ERROR },

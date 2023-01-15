@@ -1,16 +1,8 @@
 import argon2 from "argon2";
 import { GraphQLError } from "graphql";
-import {
-  Arg,
-  Ctx,
-  Mutation,
-  Query,
-  Resolver,
-  UseMiddleware,
-} from "type-graphql";
+import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from "type-graphql";
 
 import { User } from "../../entity/User";
-import { isAuth } from "../../middleware/isAuth";
 import { COOKIE_NAME } from "../../settings";
 import { MyContext } from "../../types";
 import { LoginInput, RegisterInput } from "./inputTypes";
@@ -18,7 +10,7 @@ import { LoginInput, RegisterInput } from "./inputTypes";
 @Resolver()
 export class UserResolver {
   @Query(() => User, { nullable: true })
-  @UseMiddleware(isAuth)
+  @Authorized()
   async me(@Ctx() { req }: MyContext): Promise<User | null> {
     const user = await User.findOne({ where: { id: req.session.userId } });
     return user;
@@ -60,7 +52,7 @@ export class UserResolver {
   }
 
   @Mutation(() => Boolean)
-  @UseMiddleware(isAuth)
+  @Authorized()
   logout(@Ctx() { req, res }: MyContext): Promise<boolean> {
     return new Promise((resolve) => {
       req.session.destroy((error) => {

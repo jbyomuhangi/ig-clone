@@ -2,14 +2,13 @@ import {
   Ctx,
   Query,
   Resolver,
-  UseMiddleware,
   Mutation,
   Arg,
   Args,
   Int,
+  Authorized,
 } from "type-graphql";
 
-import { isAuth } from "../../middleware/isAuth";
 import { MyContext } from "../../types";
 import { Post } from "../../entity/Post";
 import { CreatePostInput, UpdatePostInput } from "./inputTypes";
@@ -18,7 +17,7 @@ import { GetPostsArgs } from "./argsTypes";
 @Resolver()
 export class PostResolver {
   @Query(() => [Post])
-  @UseMiddleware(isAuth)
+  @Authorized()
   async posts(
     @Args() args: GetPostsArgs,
     @Ctx() { dataSource }: MyContext
@@ -38,7 +37,7 @@ export class PostResolver {
   }
 
   @Mutation(() => Post)
-  @UseMiddleware(isAuth)
+  @Authorized()
   async createPost(
     @Arg("input", () => CreatePostInput) input: CreatePostInput,
     @Ctx() { req }: MyContext
@@ -54,7 +53,7 @@ export class PostResolver {
   }
 
   @Mutation(() => Post, { nullable: true })
-  @UseMiddleware(isAuth)
+  @Authorized()
   async updatePost(
     @Arg("input", () => UpdatePostInput) input: UpdatePostInput,
     @Ctx() { req, dataSource }: MyContext
@@ -76,7 +75,7 @@ export class PostResolver {
   }
 
   @Mutation(() => Boolean)
-  @UseMiddleware(isAuth)
+  @Authorized()
   async deletePost(
     @Arg("id", () => Int) id: number,
     @Ctx() { req }: MyContext

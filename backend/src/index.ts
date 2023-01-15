@@ -6,13 +6,14 @@ import express from "express";
 import session from "express-session";
 import { GraphQLError, GraphQLFormattedError } from "graphql";
 import Redis from "ioredis";
-import { ArgumentValidationError, buildSchema } from "type-graphql";
 import path from "path";
+import { ArgumentValidationError, buildSchema } from "type-graphql";
 
+import { authChecker } from "./authChecker";
 import { AppDataSource } from "./data-source";
+import { ErrorTypeEnum } from "./enums/errorTypeEnum";
 import { COOKIE_NAME, PORT } from "./settings";
 import { MyContext } from "./types";
-import { ErrorTypeEnum } from "./enums/errorTypeEnum";
 
 const main = async () => {
   /* Initialize the data source */
@@ -45,6 +46,7 @@ const main = async () => {
   /* Build the graphql schema */
   const schema = await buildSchema({
     resolvers: [path.join(__dirname, "./resolver/**/*.resolver.{ts,js}")],
+    authChecker,
   });
 
   /* Initialize apollo server */

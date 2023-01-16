@@ -102,8 +102,12 @@ export class PostResolver {
 
   @FieldResolver(() => User, { nullable: true })
   @Authorized()
-  async user(@Root() post: Post): Promise<User | null> {
-    const user = await User.findOne({ where: { id: post.userId } });
+  async user(
+    @Root() post: Post,
+    @Ctx() { userLoader }: MyContext
+  ): Promise<User | null> {
+    const user = userLoader.load(post.userId);
+
     return user;
   }
 }

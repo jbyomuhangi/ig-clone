@@ -18,6 +18,7 @@ import { AppDataSource } from "./data-source";
 import { ErrorTypeEnum } from "./enums/errorTypeEnum";
 import { COOKIE_NAME, PORT } from "./settings";
 import { MyContext } from "./types";
+import { createUserDataLoader } from "./dataLoaders/createUserDataLoader";
 
 const main = async () => {
   /* Initialize the data source */
@@ -56,7 +57,12 @@ const main = async () => {
   /* Initialize apollo server */
   const apolloServer = new ApolloServer({
     schema,
-    context: ({ req, res }): MyContext => ({ req, res, dataSource }),
+    context: ({ req, res }): MyContext => ({
+      req,
+      res,
+      dataSource,
+      userLoader: createUserDataLoader(),
+    }),
     formatError: (error: GraphQLError): GraphQLFormattedError => {
       /* Handle validation errors specifically */
       if (error.originalError instanceof ArgumentValidationError) {

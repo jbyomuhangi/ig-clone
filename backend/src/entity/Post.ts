@@ -2,10 +2,12 @@ import { Field, Int, ObjectType } from "type-graphql";
 import {
   BaseEntity,
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from "typeorm";
 
 import { User } from "./User";
@@ -17,9 +19,17 @@ export class Post extends BaseEntity {
   @Field(() => Int)
   id: number;
 
+  @Field(() => String)
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @Field(() => String)
+  @UpdateDateColumn()
+  updatedAt: Date;
+
   @Column({ nullable: true })
   @Field(() => String, { nullable: true })
-  caption: string;
+  caption?: string;
 
   @Column()
   userId: number;

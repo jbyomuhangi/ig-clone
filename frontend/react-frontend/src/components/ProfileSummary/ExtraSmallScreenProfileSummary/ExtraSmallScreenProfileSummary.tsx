@@ -1,8 +1,6 @@
 import { Avatar, Box, styled, Button, Typography } from "@mui/material";
 import React from "react";
 
-import ExtraSmallScreenUsername from "./ExtraSmallScreenUsername";
-
 const ExtraSmallScreenProfileSummaryContainer = styled(Box)(({ theme }) => ({
   display: "flex",
   alignItems: "center",
@@ -27,7 +25,8 @@ const ExtraSmallScreenProfileSummary: React.FC = () => {
         <StyledAvatar />
 
         <SummaryContainer>
-          <ExtraSmallScreenUsername />
+          <Typography>username</Typography>
+
           <Button>Edit profile</Button>
         </SummaryContainer>
       </ExtraSmallScreenProfileSummaryContainer>

@@ -1,6 +1,5 @@
-import { Box, styled, Typography, Button, IconButton } from "@mui/material";
+import { Box, styled, Typography, Button } from "@mui/material";
 import React from "react";
-import { Settings as SettingsIcon } from "@mui/icons-material";
 
 const UsernameContainer = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -14,10 +13,6 @@ const Username: React.FC = () => {
       <Typography>username</Typography>
 
       <Button>Edit profile</Button>
-
-      <IconButton>
-        <SettingsIcon />
-      </IconButton>
     </UsernameContainer>
   );
 };

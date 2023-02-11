@@ -23,19 +23,19 @@ const ProfileBody: React.FC = () => {
     theme.breakpoints.down("sm")
   );
 
-  const data = [1, 2, 3, 4, 5, 6, 7];
+  // const data = [1, 2, 3, 4, 5, 6, 7];
 
-  const itemRenderer = () => {
-    return (
-      <div style={{ backgroundColor: "red", height: "100%", width: "100%" }}>
-        <img
-          src="https://images.unsplash.com/photo-1666817963926-7a87a3dcf187?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxMHx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=60"
-          alt=""
-          style={{ height: "100%", width: "100%", objectFit: "cover" }}
-        />
-      </div>
-    );
-  };
+  // const itemRenderer = () => {
+  //   return (
+  //     <div style={{ backgroundColor: "red", height: "100%", width: "100%" }}>
+  //       <img
+  //         src="https://images.unsplash.com/photo-1666817963926-7a87a3dcf187?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxMHx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=60"
+  //         alt=""
+  //         style={{ height: "100%", width: "100%", objectFit: "cover" }}
+  //       />
+  //     </div>
+  //   );
+  // };
 
   return (
     <Box>

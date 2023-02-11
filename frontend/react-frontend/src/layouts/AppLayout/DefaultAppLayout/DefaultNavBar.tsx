@@ -1,5 +1,15 @@
 import React from "react";
-import { Box, styled, Typography, useMediaQuery, Theme } from "@mui/material";
+import {
+  Box,
+  styled,
+  Typography,
+  useMediaQuery,
+  Theme,
+  Button,
+} from "@mui/material";
+
+import { defaultNavBarButtons } from "../appNavButtons";
+import NextLink from "@/components/NextLink";
 
 const DefaultNavBarContainer = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -13,6 +23,28 @@ const DefaultNavBarContainer = styled(Box)(({ theme }) => ({
   [theme.breakpoints.down("lg")]: {
     width: "fit-content",
     alignItems: "center",
+  },
+}));
+
+const NavButtonContainer = styled(Box)(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column",
+  gap: theme.spacing(1),
+  marginTop: theme.spacing(5),
+}));
+
+const NavButton = styled(Button)(({ theme }) => ({
+  "&.MuiButton-root": {
+    display: "flex",
+    width: "100%",
+    justifyContent: "flex-start",
+    padding: `${theme.spacing(1)}px 0px`,
+  },
+
+  [theme.breakpoints.down("lg")]: {
+    "&.MuiButton-root": {
+      justifyContent: "center",
+    },
   },
 }));
 
@@ -30,6 +62,18 @@ const DefaultNavBar: React.FC<DefaultNavBarProps> = ({}) => {
       ) : (
         <Typography>Instagram Clone</Typography>
       )}
+
+      <NavButtonContainer>
+        {defaultNavBarButtons.map((button) => {
+          return (
+            <NextLink href={button.href} key={button.name}>
+              <NavButton>
+                <Typography>{button.name}</Typography>
+              </NavButton>
+            </NextLink>
+          );
+        })}
+      </NavButtonContainer>
     </DefaultNavBarContainer>
   );
 };
